@@ -20,7 +20,7 @@ namespace ACRM.Controllers
 
         public IActionResult Privacy()
         {
-            return View();
+            return RedirectToAction("Index", "Settings", new { area = "Admin" });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

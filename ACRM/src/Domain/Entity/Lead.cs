@@ -12,5 +12,7 @@
         public DateTime AppearanceDate { get; set; }
         public Guid EmployerId {  get; set; }
         public Employer Employer { get; set; }
+        public Guid FormId { get; set; }
+        public Form Form { get; set; }
     }
 }
