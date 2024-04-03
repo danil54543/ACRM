@@ -1,9 +1,11 @@
 using ACRM.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ACRM.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,10 +20,7 @@ namespace ACRM.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return RedirectToAction("Index", "Settings", new { area = "Admin" });
-        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

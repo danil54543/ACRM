@@ -1,17 +1,31 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ACRM.src.Domain.Entity;
+using ACRM.src.Domain.ViewModel.Admin.Employer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ACRM.Controllers.Admin
 {
     [Route("admin/settings/[action]")]
     [Authorize(Roles = "admin")]
-    public class SettingsController : Controller
+    public class SettingsController(UserManager<Employer> userManager,
+        IUserStore<Employer> userStore) : Controller
     {
+        private readonly UserManager<Employer> _userManager = userManager;
+        private readonly IUserStore<Employer> _userStore = userStore;
+
         [HttpGet]
-        [Route("index")]
-        public IActionResult Index()
+        [Route("employers")]
+        public async Task<IActionResult> EmployersAsync()
         {
-            return View();
+            var employers = await _userManager.Users.ToListAsync();
+            List<EmployerVM> users = [];
+            foreach(var employer in employers)
+            {
+                users.Add(new EmployerVM { UserName = employer.UserName });                 
+            }
+            return View(users);
         }
     }
 }

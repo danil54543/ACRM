@@ -15,6 +15,10 @@ namespace ACRM.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewBag.returnUrl = returnUrl;
             return View(new LoginVM());
         }

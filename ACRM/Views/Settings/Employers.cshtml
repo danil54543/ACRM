@@ -1,0 +1,25 @@
+﻿@using ACRM.src.Domain.ViewModel.Admin.Employer
+@{
+    ViewData["Title"] = "Сотрудники";
+}
+    @model List<EmployerVM>
+<a >Добавить ✍</a>
+@if (Model.Count == 0)
+{
+    <h1 class="text-light text-center py-5">Пока никого нет 😞</h1>
+}
+else
+{
+    <ol class="list-group list-group-numbered">
+        @foreach (var emp in Model)
+        {
+            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                    <div class="fw-bold"><a>@emp.UserName</a></div>
+                    Content for list item
+                </div>
+                <span class="badge text-bg-primary rounded-pill">14</span>
+            </li>
+        }
+    </ol>
+}
