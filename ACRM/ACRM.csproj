@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Entity\" />
+    <Folder Include="src\Data\" />
+    <Folder Include="src\Domain\Entity\" />
+    <Folder Include="src\Domain\ViewModel\Employer\" />
+    <Folder Include="src\Domain\ViewModel\Admin\" />
+    <Folder Include="src\Domain\BL\" />
   </ItemGroup>
 
 </Project>
