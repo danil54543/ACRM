@@ -15,6 +15,7 @@ namespace ACRM.Controllers.Admin
         private readonly UserManager<Employer> _userManager = userManager;
         private readonly IUserStore<Employer> _userStore = userStore;
 
+
         [HttpGet]
         [Route("employers")]
         public async Task<IActionResult> EmployersAsync()
@@ -26,6 +27,41 @@ namespace ACRM.Controllers.Admin
                 users.Add(new EmployerVM { UserName = employer.UserName });                 
             }
             return View(users);
+        }
+        [HttpGet]
+        [Route("add")]
+        public IActionResult Add()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(AddEmployerVM model)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = new Employer { UserName = model.UserName, Email = model.Email };
+
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Settings", "Employers", new { area = "Admin" });
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                return RedirectToAction("Settings", "Employers", new { area = "Admin" });
+            }
+            catch
+            {
+                return RedirectToAction("Settings", "EmployerList", new { area = "Admin" }); ;
+            }
+
+
         }
     }
 }

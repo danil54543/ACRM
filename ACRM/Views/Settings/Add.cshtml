@@ -1,0 +1,17 @@
+﻿@using ACRM.src.Domain.ViewModel.Admin.Employer
+@model AddEmployerVM
+<form method="post">
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Email</label>
+        <input asp-for="@Model.Email" type="email" class="form-control" placeholder="name@example.com">
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Стейдж</label>
+        <input asp-for="@Model.UserName" type="text" class="form-control" placeholder="Васыль">
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Пароль</label>
+        <input asp-for="@Model.UserName" type="password" class="form-control" aria-required="true">
+    </div>
+    <button class="btn btn-success" type="submit">Добавить</button>
+</form>
