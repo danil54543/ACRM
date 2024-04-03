@@ -11,7 +11,7 @@
     <Folder Include="src\Domain\Entity\" />
     <Folder Include="src\Domain\ViewModel\Employer\" />
     <Folder Include="src\Domain\ViewModel\Admin\" />
-    <Folder Include="src\Domain\BL\" />
+    <Folder Include="src\BL\" />
   </ItemGroup>
 
 </Project>
