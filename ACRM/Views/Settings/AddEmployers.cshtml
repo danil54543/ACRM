@@ -1,6 +1,6 @@
 ﻿@using ACRM.src.Domain.ViewModel.Admin.Employer
 @model AddEmployerVM
-<form asp-area="Admin" asp-action="Add" asp-controller="Settings" method="post">
+<form asp-area="Admin" asp-action="AddEmployers" asp-controller="Settings" method="post">
     <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Email</label>
         <input asp-for="@Model.Email" type="email" class="form-control" placeholder="name@example.com">
