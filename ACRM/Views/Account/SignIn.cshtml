@@ -22,7 +22,8 @@
                     <form class="row justify-content-center" autocomplete="on" method="post">
                         <div class="row g-3 col-lg-4 col-sm-8">
                             @*                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            *@                            <input asp-for="UserName" autocomplete="username" aria-required="true" class="form-control" id="floatingInput" placeholder="Email">
+                            *@                            
+                            <input asp-for="UserName" autocomplete="username" aria-required="true" class="form-control" id="floatingInput" placeholder="Email">
                             <input asp-for="Password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password">
                             <button type="submit" class="btn btn-success">Log In</button>
                         </div>

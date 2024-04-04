@@ -13,7 +13,7 @@ namespace ACRM.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl)
+        public IActionResult SignIn(string returnUrl)
         {
             if(User.Identity.IsAuthenticated)
             {
@@ -24,7 +24,7 @@ namespace ACRM.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginVM model, string returnUrl)
+        public async Task<IActionResult> SignIn(LoginVM model, string returnUrl)
         {
 
             Employer user = await _userManager.FindByNameAsync(model.UserName);
@@ -39,12 +39,10 @@ namespace ACRM.Controllers
             }
             return View(model);
         }
-        [HttpPost]
-        [Route("logout")]
         [Authorize]
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("SignIn");
         }
     }}
