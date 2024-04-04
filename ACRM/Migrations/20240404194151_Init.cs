@@ -15,7 +15,7 @@ namespace ACRM.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -29,7 +29,8 @@ namespace ACRM.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InWork = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -70,12 +71,24 @@ namespace ACRM.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Resources",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -96,7 +109,7 @@ namespace ACRM.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -118,7 +131,7 @@ namespace ACRM.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,8 +148,8 @@ namespace ACRM.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -159,7 +172,7 @@ namespace ACRM.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -188,25 +201,50 @@ namespace ACRM.Migrations
                     Police = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Housing = table.Column<bool>(type: "bit", nullable: false),
                     RelocationPayment = table.Column<bool>(type: "bit", nullable: false),
-                    LeadId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EmployerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EmployerId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LeadId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TransferDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Forms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Forms_AspNetUsers_EmployerId1",
-                        column: x => x.EmployerId1,
+                        name: "FK_Forms_AspNetUsers_EmployerId",
+                        column: x => x.EmployerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Forms_Offices_OfficeId",
                         column: x => x.OfficeId,
                         principalTable: "Offices",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployerResource",
+                columns: table => new
+                {
+                    EmployersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ResourcesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployerResource", x => new { x.EmployersId, x.ResourcesId });
+                    table.ForeignKey(
+                        name: "FK_EmployerResource_AspNetUsers_EmployersId",
+                        column: x => x.EmployersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployerResource_Resources_ResourcesId",
+                        column: x => x.ResourcesId,
+                        principalTable: "Resources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,7 +252,6 @@ namespace ACRM.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Resource = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -222,21 +259,27 @@ namespace ACRM.Migrations
                     Moving = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppearanceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EmployerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmployerId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    FormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ResourceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Leads", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Leads_AspNetUsers_EmployerId1",
-                        column: x => x.EmployerId1,
+                        name: "FK_Leads_AspNetUsers_EmployerId",
+                        column: x => x.EmployerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Leads_Forms_FormId",
                         column: x => x.FormId,
                         principalTable: "Forms",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Leads_Resources_ResourceId",
+                        column: x => x.ResourceId,
+                        principalTable: "Resources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -244,17 +287,17 @@ namespace ACRM.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "44546e06-8719-4ad8-b88a-f271ae9d6eab", null, "admin", "ADMIN" });
+                values: new object[] { new Guid("44546e06-8719-4ad8-b88a-f271ae9d6eab"), null, "admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "3b62472e-4f66-49fa-a20f-e7685b9565d8", 0, "4e85a72f-8fea-4388-b495-e61c497cc81b", "my@email.com", true, false, null, "MY@EMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEE5yOFNiuZEFQ9N3LFP7mEfWfw0rmSJIebeyGWJefVWBHZ6QcBYNhpe3zQl9w6/yxg==", null, false, "", false, "admin" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "InWork", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"), 0, "4c0942a5-628b-44ab-b024-18a7a2c82154", "my@email.com", true, false, false, null, "MY@EMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEOtrn2ESqpu7JL5iV5h6iCnhkJOB1ncuhUraCD4wnJ5PrNyG0trVdPdZ7K4CoQm+lQ==", null, false, "", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "44546e06-8719-4ad8-b88a-f271ae9d6eab", "3b62472e-4f66-49fa-a20f-e7685b9565d8" });
+                values: new object[] { new Guid("44546e06-8719-4ad8-b88a-f271ae9d6eab"), new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -296,9 +339,14 @@ namespace ACRM.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Forms_EmployerId1",
+                name: "IX_EmployerResource_ResourcesId",
+                table: "EmployerResource",
+                column: "ResourcesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Forms_EmployerId",
                 table: "Forms",
-                column: "EmployerId1");
+                column: "EmployerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forms_OfficeId",
@@ -306,15 +354,20 @@ namespace ACRM.Migrations
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Leads_EmployerId1",
+                name: "IX_Leads_EmployerId",
                 table: "Leads",
-                column: "EmployerId1");
+                column: "EmployerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leads_FormId",
                 table: "Leads",
                 column: "FormId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Leads_ResourceId",
+                table: "Leads",
+                column: "ResourceId");
         }
 
         /// <inheritdoc />
@@ -336,6 +389,9 @@ namespace ACRM.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "EmployerResource");
+
+            migrationBuilder.DropTable(
                 name: "Leads");
 
             migrationBuilder.DropTable(
@@ -343,6 +399,9 @@ namespace ACRM.Migrations
 
             migrationBuilder.DropTable(
                 name: "Forms");
+
+            migrationBuilder.DropTable(
+                name: "Resources");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

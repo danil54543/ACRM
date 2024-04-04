@@ -1,31 +1,30 @@
-﻿using ACRM.src.Domain.Entity;
+﻿using ACRM.src.Data.DbConfig;
+using ACRM.src.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ACRM.src.Data
 {
-    public class AppDbContext : IdentityDbContext<Employer>
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<Employer, IdentityRole<Guid>, Guid>(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
         public DbSet<Lead> Leads { get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<Office> Offices { get; set; }
+        public DbSet<Resource> Resources { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            modelBuilder.Entity<IdentityRole<Guid>>().HasData(new IdentityRole<Guid>
             {
-                Id = "44546e06-8719-4ad8-b88a-f271ae9d6eab",
+                Id = Guid.Parse("44546e06-8719-4ad8-b88a-f271ae9d6eab"),
                 Name = "admin",
                 NormalizedName = "ADMIN"
             });
             modelBuilder.Entity<Employer>().HasData(new Employer
             {
-                Id = "3b62472e-4f66-49fa-a20f-e7685b9565d8",
+                Id = Guid.Parse("3b62472e-4f66-49fa-a20f-e7685b9565d8"),
                 UserName = "admin",
                 NormalizedUserName = "ADMIN",
                 Email = "my@email.com",
@@ -34,15 +33,14 @@ namespace ACRM.src.Data
                 PasswordHash = new PasswordHasher<Employer>().HashPassword(null, "superpassword"),
                 SecurityStamp = string.Empty
             });
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
             {
-                RoleId = "44546e06-8719-4ad8-b88a-f271ae9d6eab",
-                UserId = "3b62472e-4f66-49fa-a20f-e7685b9565d8"
+                RoleId = Guid.Parse("44546e06-8719-4ad8-b88a-f271ae9d6eab"),
+                UserId = Guid.Parse("3b62472e-4f66-49fa-a20f-e7685b9565d8")
             });
-            modelBuilder.Entity<Form>()
-            .HasOne(f => f.Lead)
-            .WithOne(l => l.Form)
-            .HasForeignKey<Lead>(l => l.FormId);
+            modelBuilder.ApplyConfiguration(new FormConfiguration());
+            modelBuilder.ApplyConfiguration(new LeadConfiguration());
+            
         }
     }
 }

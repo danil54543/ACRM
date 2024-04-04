@@ -11,12 +11,12 @@
         public string Police { get; set; }
         public bool Housing { get; set; }
         public bool RelocationPayment { get; set; }
-        public Guid? LeadId { get; set; }
-        public Lead? Lead { get; set; }
-        public Guid? EmployerId { get; set; }
-        public Employer? Employer { get; set; }
-        public Guid? OfficeId { get; set; }
-        public Office? Office { get; set; }
+        public Guid LeadId { get; set; }
+        public Lead Lead { get; set; }
+        public Guid EmployerId { get; set; }
+        public Employer Employer { get; set; }
+        public Guid OfficeId { get; set; }
+        public Office Office { get; set; }
         public DateTime TransferDate { get; set; }
     }
 }

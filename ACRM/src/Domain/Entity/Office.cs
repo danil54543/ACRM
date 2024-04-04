@@ -11,6 +11,6 @@
         public bool InSearch { get; set; }
         public int Prioriry { get; set; }
         public string AgeThreshold { get; set; }
-        public List<Form> Forms { get; set; }
+        public List<Form> Forms { get; set; } = [];
     }
 }

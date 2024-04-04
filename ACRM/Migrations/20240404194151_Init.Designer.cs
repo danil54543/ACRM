@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ACRM.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240403204658_Init")]
+    [Migration("20240404194151_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -27,8 +27,9 @@ namespace ACRM.Migrations
 
             modelBuilder.Entity("ACRM.src.Domain.Entity.Employer", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -42,6 +43,9 @@ namespace ACRM.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("InWork")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -92,15 +96,16 @@ namespace ACRM.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3b62472e-4f66-49fa-a20f-e7685b9565d8",
+                            Id = new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4e85a72f-8fea-4388-b495-e61c497cc81b",
+                            ConcurrencyStamp = "4c0942a5-628b-44ab-b024-18a7a2c82154",
                             Email = "my@email.com",
                             EmailConfirmed = true,
+                            InWork = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MY@EMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE5yOFNiuZEFQ9N3LFP7mEfWfw0rmSJIebeyGWJefVWBHZ6QcBYNhpe3zQl9w6/yxg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOtrn2ESqpu7JL5iV5h6iCnhkJOB1ncuhUraCD4wnJ5PrNyG0trVdPdZ7K4CoQm+lQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -125,11 +130,8 @@ namespace ACRM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("EmployerId")
+                    b.Property<Guid>("EmployerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("EmployerId1")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Experience")
                         .HasColumnType("nvarchar(max)");
@@ -137,14 +139,14 @@ namespace ACRM.Migrations
                     b.Property<bool>("Housing")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("LeadId")
+                    b.Property<Guid>("LeadId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OfficeId")
+                    b.Property<Guid>("OfficeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Police")
@@ -159,7 +161,7 @@ namespace ACRM.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployerId1");
+                    b.HasIndex("EmployerId");
 
                     b.HasIndex("OfficeId");
 
@@ -185,9 +187,6 @@ namespace ACRM.Migrations
                     b.Property<Guid>("EmployerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EmployerId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Experience")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -203,16 +202,17 @@ namespace ACRM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Resource")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("ResourceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployerId1");
+                    b.HasIndex("EmployerId");
 
                     b.HasIndex("FormId")
                         .IsUnique();
+
+                    b.HasIndex("ResourceId");
 
                     b.ToTable("Leads");
                 });
@@ -258,10 +258,41 @@ namespace ACRM.Migrations
                     b.ToTable("Offices");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("ACRM.src.Domain.Entity.Resource", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Resources");
+                });
+
+            modelBuilder.Entity("EmployerResource", b =>
+                {
+                    b.Property<Guid>("EmployersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ResourcesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EmployersId", "ResourcesId");
+
+                    b.HasIndex("ResourcesId");
+
+                    b.ToTable("EmployerResource");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -287,13 +318,13 @@ namespace ACRM.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "44546e06-8719-4ad8-b88a-f271ae9d6eab",
+                            Id = new Guid("44546e06-8719-4ad8-b88a-f271ae9d6eab"),
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -307,9 +338,8 @@ namespace ACRM.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -318,7 +348,7 @@ namespace ACRM.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -332,9 +362,8 @@ namespace ACRM.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -343,7 +372,7 @@ namespace ACRM.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -354,9 +383,8 @@ namespace ACRM.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -365,13 +393,13 @@ namespace ACRM.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -382,15 +410,15 @@ namespace ACRM.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "3b62472e-4f66-49fa-a20f-e7685b9565d8",
-                            RoleId = "44546e06-8719-4ad8-b88a-f271ae9d6eab"
+                            UserId = new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"),
+                            RoleId = new Guid("44546e06-8719-4ad8-b88a-f271ae9d6eab")
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -410,11 +438,15 @@ namespace ACRM.Migrations
                 {
                     b.HasOne("ACRM.src.Domain.Entity.Employer", "Employer")
                         .WithMany("Forms")
-                        .HasForeignKey("EmployerId1");
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ACRM.src.Domain.Entity.Office", "Office")
                         .WithMany("Forms")
-                        .HasForeignKey("OfficeId");
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employer");
 
@@ -425,29 +457,54 @@ namespace ACRM.Migrations
                 {
                     b.HasOne("ACRM.src.Domain.Entity.Employer", "Employer")
                         .WithMany("Leads")
-                        .HasForeignKey("EmployerId1");
+                        .HasForeignKey("EmployerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ACRM.src.Domain.Entity.Form", "Form")
                         .WithOne("Lead")
                         .HasForeignKey("ACRM.src.Domain.Entity.Lead", "FormId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ACRM.src.Domain.Entity.Resource", "Resource")
+                        .WithMany("Leads")
+                        .HasForeignKey("ResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employer");
 
                     b.Navigation("Form");
+
+                    b.Navigation("Resource");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("EmployerResource", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("ACRM.src.Domain.Entity.Employer", null)
+                        .WithMany()
+                        .HasForeignKey("EmployersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ACRM.src.Domain.Entity.Resource", null)
+                        .WithMany()
+                        .HasForeignKey("ResourcesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("ACRM.src.Domain.Entity.Employer", null)
                         .WithMany()
@@ -456,7 +513,7 @@ namespace ACRM.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("ACRM.src.Domain.Entity.Employer", null)
                         .WithMany()
@@ -465,9 +522,9 @@ namespace ACRM.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -480,7 +537,7 @@ namespace ACRM.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("ACRM.src.Domain.Entity.Employer", null)
                         .WithMany()
@@ -498,12 +555,18 @@ namespace ACRM.Migrations
 
             modelBuilder.Entity("ACRM.src.Domain.Entity.Form", b =>
                 {
-                    b.Navigation("Lead");
+                    b.Navigation("Lead")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ACRM.src.Domain.Entity.Office", b =>
                 {
                     b.Navigation("Forms");
+                });
+
+            modelBuilder.Entity("ACRM.src.Domain.Entity.Resource", b =>
+                {
+                    b.Navigation("Leads");
                 });
 #pragma warning restore 612, 618
         }

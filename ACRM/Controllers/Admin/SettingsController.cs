@@ -26,7 +26,7 @@ namespace ACRM.Controllers.Admin
                 List<EmployerVM> users = [];
                 foreach (var employer in employers)
                 {
-                    users.Add(new EmployerVM { UserName = employer.UserName });
+                    users.Add(new EmployerVM { UserName = employer.UserName}) ;
                 }
                 return View(users);
             }
@@ -63,11 +63,28 @@ namespace ACRM.Controllers.Admin
             }
             catch
             {
-                return RedirectToAction("Error","Home");
-
+                return RedirectToAction("Error", "Home");
             }
-
-
         }
+        //public async Task<List<string>> GetOnlineUsersAsync()
+        //{
+        //    var onlineUsers = new List<string>();
+
+        //    // Получаем список всех активных сессий
+        //    var allSessions = await _httpContextAccessor.HttpContext.SessionStore.ListAsync();
+
+        //    // Проходим по каждой сессии и добавляем имя пользователя в список, если сессия аутентифицирована
+        //    foreach (var session in allSessions)
+        //    {
+        //        var principal = await _httpContextAccessor.HttpContext.SessionStore.GetAsync(session);
+
+        //        if (principal != null && principal.Identity != null && principal.Identity.IsAuthenticated)
+        //        {
+        //            onlineUsers.Add(principal.Identity.Name);
+        //        }
+        //    }
+
+        //    return onlineUsers.Distinct().ToList(); // Возвращаем уникальных пользователей
+        //}
     }
 }

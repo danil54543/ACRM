@@ -37,10 +37,7 @@
                             </li>
                         }                       
                     </ul>
-                    @if (User.Identity.IsAuthenticated)
-                    {
                         <a class="btn btn-outline-danger ml-auto" asp-area="" asp-controller="Account" asp-action="SignOut">Выйти</a>
-                    }
                 </div>
             </div>
         </nav>

@@ -1,3 +1,4 @@
+using ACRM.src.BL;
 using ACRM.src.Data;
 using ACRM.src.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,7 @@ internal class Program
 
         builder.Services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(connectionString));
-        builder.Services.AddIdentity<Employer, IdentityRole>(opts =>
+        builder.Services.AddIdentity<Employer, IdentityRole<Guid>>(opts =>
         {
             opts.User.RequireUniqueEmail = true;
             opts.Password.RequiredLength = 6;
