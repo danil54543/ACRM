@@ -18,23 +18,32 @@ namespace ACRM.Controllers.Admin
 
         [HttpGet]
         [Route("employers")]
-        public async Task<IActionResult> EmployersAsync()
+        public async Task<IActionResult> Employers()
         {
-            var employers = await _userManager.Users.ToListAsync();
-            List<EmployerVM> users = [];
-            foreach(var employer in employers)
+            try
             {
-                users.Add(new EmployerVM { UserName = employer.UserName });                 
+                var employers = await _userManager.Users.ToListAsync();
+                List<EmployerVM> users = [];
+                foreach (var employer in employers)
+                {
+                    users.Add(new EmployerVM { UserName = employer.UserName });
+                }
+                return View(users);
             }
-            return View(users);
+            catch
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            
         }
         [HttpGet]
         [Route("add")]
         public IActionResult Add()
         {
-            return View();
+            return View(new AddEmployerVM());
         }
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> Add(AddEmployerVM model)
         {
 
@@ -47,18 +56,15 @@ namespace ACRM.Controllers.Admin
                     var result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Settings", "Employers", new { area = "Admin" });
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
+                        return RedirectToAction("Employers");
                     }
                 }
-                return RedirectToAction("Settings", "Employers", new { area = "Admin" });
+                return RedirectToAction("Employers");
             }
             catch
             {
-                return RedirectToAction("Settings", "EmployerList", new { area = "Admin" }); ;
+                return RedirectToAction("Error","Home");
+
             }
 
 
