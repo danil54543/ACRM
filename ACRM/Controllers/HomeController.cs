@@ -6,8 +6,12 @@ using System.Diagnostics;
 namespace ACRM.Controllers
 {
     [Authorize]
+    [Route("home")]
+
     public class HomeController : Controller
     {
+        [Route("index")]
+
         public IActionResult Index()
         {
             return View();

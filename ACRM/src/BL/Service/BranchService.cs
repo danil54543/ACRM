@@ -13,11 +13,19 @@ namespace ACRM.src.BL.Service
         {
             try
             {
+                byte[] ImageData;
+                string ImageContentType;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await model.ImageData.CopyToAsync(memoryStream);
+                    ImageData = memoryStream.ToArray();
+                    ImageContentType = model.ImageData.ContentType;
+                }
                 var branch = new Office()
                 {
                     Id = Guid.NewGuid(),
-                    ImageData = model.ImageData,
-                    ImageContentType = model.ImageContentType,
+                    ImageData = ImageData,
+                    ImageContentType = ImageContentType,
                     Name = model.Name,
                     Location = model.Location,
                     DescriptionRu = model.DescriptionRu,

@@ -1,1 +1,40 @@
-﻿
+﻿@using ACRM.src.Domain.ViewModel.Admin.Branch
+@model AddBranchVM
+<div class="container">
+    <h2>Create Branch</h2>
+    <form asp-area="Admin" asp-action="AddBranch" asp-controller="Settings" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="ImageData">Лого</label>
+            <input asp-for="ImageData" type="file" class="form-control-file"  name="ImageData">
+        </div>
+        <div class="form-group">
+            <label for="Name">Название</label>
+            <input asp-for="Name" type="text" class="form-control"  name="Name" required>
+        </div>
+        <div class="form-group">
+            <label for="Location">Расположение</label>
+            <input asp-for="Location" type="text" class="form-control"  name="Location" required>
+        </div>
+        <div class="form-group">
+            <label for="DescriptionRu">Описание (Ru)</label>
+            <textarea asp-for="DescriptionRu" class="form-control"  name="DescriptionRu" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="DescriptionUkr">Описание (Ukr)</label>
+            <textarea asp-for="DescriptionUkr" class="form-control"  name="DescriptionUkr" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="Gender">Пол:</label>
+            <select asp-for="Gender" class="form-control" name="Gender">
+                <option value="Male">М</option>
+                <option value="Female">Ж</option>
+                <option value="Other">М/Ж</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="AgeThreshold">Age Threshold:</label>
+            <input asp-for="AgeThreshold" type="text" class="form-control" id="AgeThreshold" name="AgeThreshold">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

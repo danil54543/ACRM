@@ -4,7 +4,7 @@ using static ACRM.src.BL.Repository.BranchRepository;
 
 namespace ACRM.src.BL.Repository
 {
-    public class BranchRepository(AppDbContext db): IBranchRepository
+    public class BranchRepository(AppDbContext db) : IBranchRepository
     {
         private readonly AppDbContext db = db;
         public IQueryable<Office> GetAll()
