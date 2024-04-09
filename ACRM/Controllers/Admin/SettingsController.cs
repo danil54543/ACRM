@@ -1,4 +1,5 @@
-﻿using ACRM.src.Domain.Entity;
+﻿using ACRM.src.BL.Service;
+using ACRM.src.Domain.Entity;
 using ACRM.src.Domain.ViewModel.Admin.Branch;
 using ACRM.src.Domain.ViewModel.Admin.Employer;
 using Microsoft.AspNetCore.Authorization;
@@ -9,16 +10,16 @@ using Microsoft.EntityFrameworkCore;
 namespace ACRM.Controllers.Admin
 {
     [Route("admin/settings/[action]")]
-    [Authorize(Roles = "admin")]
-    public class SettingsController(UserManager<Employer> userManager,
-        IUserStore<Employer> userStore) : Controller
+    [Authorize]
+    public class SettingsController(UserManager<Employer> userManager, IUserStore<Employer> userStore, IBranchService branchService) : Controller
     {
         private readonly UserManager<Employer> _userManager = userManager;
         private readonly IUserStore<Employer> _userStore = userStore;
-
+        private readonly IBranchService _branchService = branchService;
 
         [HttpGet]
         [Route("employers")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Employers()
         {
             try
@@ -27,7 +28,7 @@ namespace ACRM.Controllers.Admin
                 List<EmployerVM> users = [];
                 foreach (var employer in employers)
                 {
-                    users.Add(new EmployerVM { UserName = employer.UserName}) ;
+                    users.Add(new EmployerVM { UserName = employer.UserName });
                 }
                 return View(users);
             }
@@ -35,15 +36,17 @@ namespace ACRM.Controllers.Admin
             {
                 return RedirectToAction("Error", "Home");
             }
-            
+
         }
         [HttpGet]
         [Route("add-employers")]
+        [Authorize(Roles = "admin")]
         public IActionResult AddEmployers()
         {
             return View(new AddEmployerVM());
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddEmployers(AddEmployerVM model)
         {
 
@@ -68,25 +71,21 @@ namespace ACRM.Controllers.Admin
         }
         [HttpGet]
         [Route("branches")]
-        public async Task<IActionResult> Branches()
+        public IActionResult Branches()
         {
-            try
-            {
-                
-            }
-            catch
-            {
-                return RedirectToAction("Error", "Home");
-            }
+            var branches = _branchService.GetAll().Result;
+            return View(branches);
 
         }
         [HttpGet]
         [Route("add-branches")]
+        [Authorize(Roles = "admin")]
         public IActionResult AddBranch()
         {
             return View(new AddBranchVM());
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddBranch(AddBranchVM model)
         {
 
@@ -94,8 +93,8 @@ namespace ACRM.Controllers.Admin
             {
                 if (ModelState.IsValid)
                 {
-                    
-                    
+
+
                 }
                 return RedirectToAction("Branches");
             }

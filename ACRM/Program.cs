@@ -1,8 +1,10 @@
-using ACRM.src.BL;
+using ACRM.src.BL.Repository;
+using ACRM.src.BL.Service;
 using ACRM.src.Data;
 using ACRM.src.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static ACRM.src.BL.Repository.BranchRepository;
 
 
 internal class Program
@@ -13,7 +15,7 @@ internal class Program
 
         builder.Services.AddControllersWithViews();
 
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string not found.");
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
         builder.Services.AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(connectionString));
@@ -27,13 +29,16 @@ internal class Program
             opts.Password.RequireDigit = false;
         }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
-        builder.Services.ConfigureApplicationCookie(options =>
+        builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+        builder.Services.AddScoped<IBranchService, BranchService>();
+
+        builder.Services.ConfigureApplicationCookie(opts =>
         {
-            options.Cookie.Name = "crm";
-            options.Cookie.HttpOnly = true;
-            options.LoginPath = "/account/login";
-            options.AccessDeniedPath = "/account/accessdenied";
-            options.SlidingExpiration = true;
+            opts.Cookie.Name = "crm";
+            opts.Cookie.HttpOnly = true;
+            opts.LoginPath = "/account/login";
+            opts.AccessDeniedPath = "/account/accessdenied";
+            opts.SlidingExpiration = true;
         });
         var app = builder.Build();
 

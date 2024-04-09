@@ -3,24 +3,21 @@
     ViewData["Title"] = "Сотрудники";
 }
     @model List<BranchVM>
-<a>Добавить ✍</a>
-<a asp-area="Admin" asp-controller="Settings" asp-action="AddBranch">Добавить филиал</a>
+<a asp-area="Admin" asp-controller="Settings" asp-action="AddBranch">Добавить ✍</a>
 @if (Model.Count == 0)
 {
-    <h1 class="text-light text-center py-5">Пока никого нет 😞</h1>
+    <h1 class="text-center py-5">Пока никого нет 😞</h1>
 }
 else
 {
-    <ol class="list-group list-group-numbered">
-        @foreach (var brn in Model)
-        {
-            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold"><a>@brn.Name</a></div>
-                    @brn.Location 
-                </div>
-                <span class="badge text-bg-primary rounded-pill">14</span>
-            </li>
-        }
-    </ol>
+    @foreach (var branch in Model)
+    {
+        <a class="card">
+            <img src="data:@branch.ImageContentType;base64,@Convert.ToBase64String(branch.ImageData)" class="card-img-top" alt="Image">
+            <div class="card-body">
+                <h5 class="card-title">@branch.Name</h5>
+                <p class="card-text">@branch.Location</p>
+            </div>
+        </a>
+    }
 }

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\User\" />
-    <Folder Include="src\BL\Service\" />
     <Folder Include="src\Domain\ViewModel\Employer\" />
   </ItemGroup>
 

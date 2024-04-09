@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ACRM.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240404194151_Init")]
+    [Migration("20240408203454_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -44,6 +44,12 @@ namespace ACRM.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ImageContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<bool>("InWork")
                         .HasColumnType("bit");
@@ -98,14 +104,14 @@ namespace ACRM.Migrations
                         {
                             Id = new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c0942a5-628b-44ab-b024-18a7a2c82154",
+                            ConcurrencyStamp = "7d984f9a-90db-4c81-8c79-e42455654f78",
                             Email = "my@email.com",
                             EmailConfirmed = true,
                             InWork = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MY@EMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOtrn2ESqpu7JL5iV5h6iCnhkJOB1ncuhUraCD4wnJ5PrNyG0trVdPdZ7K4CoQm+lQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPQ6A62A88HC5yF17y51ky1GNxqql7pZJLC6nhMNnqLZn7PVi842iRUfzdSF/Wl5Gg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -138,6 +144,12 @@ namespace ACRM.Migrations
 
                     b.Property<bool>("Housing")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ImageContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<Guid>("LeadId")
                         .HasColumnType("uniqueidentifier");
@@ -235,6 +247,16 @@ namespace ACRM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<bool>("InSearch")
                         .HasColumnType("bit");
 
@@ -248,10 +270,6 @@ namespace ACRM.Migrations
 
                     b.Property<int>("Prioriry")
                         .HasColumnType("int");
-
-                    b.Property<string>("Schedule")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

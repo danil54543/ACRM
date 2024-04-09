@@ -12,6 +12,7 @@ namespace ACRM.src.Data
         public DbSet<Form> Forms { get; set; }
         public DbSet<Office> Offices { get; set; }
         public DbSet<Resource> Resources { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,7 +41,7 @@ namespace ACRM.src.Data
             });
             modelBuilder.ApplyConfiguration(new FormConfiguration());
             modelBuilder.ApplyConfiguration(new LeadConfiguration());
-            
+
         }
     }
 }

@@ -30,6 +30,8 @@ namespace ACRM.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ImageContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InWork = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -56,14 +58,16 @@ namespace ACRM.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ImageContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Schedule = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DescriptionRu = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DescriptionUkr = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InSearch = table.Column<bool>(type: "bit", nullable: false),
                     Prioriry = table.Column<int>(type: "int", nullable: false),
-                    AgeThreshold = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AgeThreshold = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -193,6 +197,8 @@ namespace ACRM.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    ImageContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -291,8 +297,8 @@ namespace ACRM.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "InWork", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"), 0, "4c0942a5-628b-44ab-b024-18a7a2c82154", "my@email.com", true, false, false, null, "MY@EMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEOtrn2ESqpu7JL5iV5h6iCnhkJOB1ncuhUraCD4wnJ5PrNyG0trVdPdZ7K4CoQm+lQ==", null, false, "", false, "admin" });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "ImageContentType", "ImageData", "InWork", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("3b62472e-4f66-49fa-a20f-e7685b9565d8"), 0, "7d984f9a-90db-4c81-8c79-e42455654f78", "my@email.com", true, null, null, false, false, null, "MY@EMAIL.COM", "ADMIN", "AQAAAAIAAYagAAAAEPQ6A62A88HC5yF17y51ky1GNxqql7pZJLC6nhMNnqLZn7PVi842iRUfzdSF/Wl5Gg==", null, false, "", false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
